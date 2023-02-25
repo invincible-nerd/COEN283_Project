@@ -1,0 +1,66 @@
+To implement a simple virtual memory, the following parts should be included:
+
+1. Page table
+2. Page fault handler
+3. Address translation
+4. Translation look-aside buffer
+5. Memory management unit (MMU)
+
+In this project the five parts are deigned separately.
+
+The basic requirements for each part are as follows:
+
+0. Some criterion
+    0.1 All structure name should be uppercase with underline, e.g. PAGE_TABLE_ENTRY
+    0.2 All variable name or structure instance should be lowercase with underline, e.g. page_table_entry_1, dirty_bit, ...
+    0.3 All constants should be uppercase and defined in a specific source file only: e.g. #defind PAGE_SIZE 256 should be in constants.h
+    0.4 All functions which will be imported by other source should be like: First_Letter_Uppercase()
+    0.5 All functions which will only be used in the same source file should be like: helper_function()
+
+1. Page table:
+    1.0 Define constants including: PAGE_SIZE, PAGE_NUM, FRAME_SIZE, FRAME_NUM
+    1.1 Define basic virtual memory structure:
+        1.1.1  struct PAGE_TABLE_ENTRY: including integers: (protection_bits), dirty_bit, reference_bit, valid_bit, page_frame_number
+        1.1.2  struct (or just an array) PAGE_TABLE: including an array of PAGE_TABLE_ENTRY
+    1.2 Define basic physical memory structure:
+        1.2.1  unsigned character array physical_memory (Be attention: the size of physical memory should be equal to FRAME_SIZE * FRAME_NUM)
+    1.3 Define basic secondary memory structure (DISK) [May be used in FILE SYSTEM part]:
+        1.3.1  Implement basic structures
+            1.3.1.1 struct dist: including an array of characters - data (size at least as same as virtual memory, may be more as needed)
+        1.3.2  Implement basic functions
+            1.3.2.2 function Write_Page_to_Disk(): write page data to disk
+            1.3.2.3 function Read_Page_to_Disk(): read page data to disk
+    1.4 Implement some basic helper functions
+        1.3.1  function Get_Page_Number(): calculate page_number using virtual address
+        1.3.2  function Get_Page_Offset(): calculate page_offset using virtual address
+        ..... more as needed
+
+2. Page fault handler:
+    2.1 Implement function Page_Table_Handler() including the following functions:
+        2.1.1 function get_free_frame(): find a free frame by a proper page replacement algorithm
+        2.1.2 function load_page(): load page from the disk to physical memory
+        2.1.3 function update_table(): update related page table linking to the physical memory
+
+3. Address translation (virtual memory address -> physical memory address):
+    3.1 Implement function Translate_Address()
+        3.1.1 calculate page_number and page_offset by using helper functions in part1.4
+        3.1.2 check if page fault or not, handle it if it has page fault
+        3.1.3 calculate and return physical memory address
+
+4. Translation Look-aside Buffer (TLB):
+    4.0 Define a small constant TLB_SIZE (e.g. 64) => number of entries in TLB
+    4.1 Define basic TLB structures:
+        4.1.1 struct TLB_ENTRY: include page_num and frame_num
+        4.2.2 struct (or just an array) TLB_TABLE (fixed size = TLB_SIZE)
+    4.2 Implement function search_TLB(): search the TLB for the desired page number
+        4.2.1 Found => skip check page table and directly get frame number
+        4.2.2 Not Found:
+            4.2.2.1 check/calculate frame number using function in part 2 and 3
+            4.2.2.2 update TLB_TABLE by recent referenced page number (Implement function update_TLB())
+            4.2.2.3 when there's not enough TLB_TABLE entries, replace it by proper algorithm
+
+5. Memory management unit (MMU):
+    5.1 Initialize Page Table, TLB Table, (Physical Memory as needed)
+    5.2 Implement function check_table(): check information given certain virtual memory address
+    //5.3 Implement function save_table(): check information save certain data to the physical memory related to the given virtual memory address
+    //5.3 save_table() functions cannot be accessed by users (Will be invoked in File System part)
