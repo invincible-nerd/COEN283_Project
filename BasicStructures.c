@@ -18,9 +18,15 @@ typedef struct PAGE_TABLE {
 };
 
 // 1.2 Define basic physical memory
-typedef struct PHYSICAL_MEMORY {
-   char frame_data[FRAME_NUM*FRAME_SIZE];
+typedef struct FRAME {
+    int is_empty; // 1 -> empty, 0 -> occupied
+    char frame_data[FRAME_SIZE]; // FRAME_SIZE should be as same as BLOCK_SIZE in disk
 };
+
+typedef struct PHYSICAL_MEMORY {
+    struct FRAME frames[FRAME_NUM];
+};
+
 
 // 1.3 Implement DISK
 // 1.3.1 Define basic secondary memory structure
