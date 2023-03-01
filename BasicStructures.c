@@ -3,7 +3,9 @@
 #include <math.h>
 #include <string.h>
 #include "constants.h"
+#include "BasicStructures.h"
 
+/*
 // 1.1 Define basic virtual memory structure
 typedef struct PAGE_TABLE_ENTRY {
     int protection_bits;
@@ -33,7 +35,7 @@ typedef struct PHYSICAL_MEMORY {
 typedef struct DISK {
     char disk_data[MAX_BLOCK*BLOCK_SIZE];
 };
-
+*/
 
 // 1.3.2.0 complete function seek_free_block to find free block series
 int seek_free_block(int block_number, struct DISK *disk){
