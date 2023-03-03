@@ -72,3 +72,9 @@ void Page_Table_Handler(uint16_t virtual_address, struct PAGE_TABLE *page_table,
     char data = physical_memory->frames[page_entry.frame_number].frame_data[page_offset];
     printf("Data accessed in physical memory: %c\n", data);
 }
+
+void printData(struct PHYSICAL_MEMORY *physical_memory,int frame_number, int offset ){
+        // Access the memory in the physical memory
+    char data = physical_memory->frames[frame_number].frame_data[offset];
+    printf("Data accessed in physical memory: %c\n", data);
+}
