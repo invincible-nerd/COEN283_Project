@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include "constants.h"
+#include <stdint.h>
 
 // 1.1 Define basic virtual memory structure
 typedef struct PAGE_TABLE_ENTRY {
